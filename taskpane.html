@@ -71,7 +71,6 @@
     .toggle-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:6px 0;}
     .toggle-label{font-size:11px;font-weight:500;color:var(--text-muted);display:flex;align-items:center;gap:6px;}
     .toggle-label svg{width:12px;height:12px;}
-    .toggle-swatch{width:10px;height:10px;border-radius:2px;background:#FEFF42;flex-shrink:0;}
     .toggle-track{width:32px;height:18px;border-radius:9px;background:var(--border);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
     .toggle-track.on{background:rgba(254,255,66,0.35);}
     .toggle-thumb{width:14px;height:14px;border-radius:50%;background:var(--text-muted);position:absolute;top:2px;left:2px;transition:transform .2s,background .2s;}
@@ -118,7 +117,7 @@
           <div class="input-hint">Saved automatically. Writes in the existing cell's date format.</div>
         </div>
         <div class="toggle-row">
-          <span class="toggle-label"><i data-lucide="paintbrush"></i>Highlight cell in yellow <span class="toggle-swatch"></span></span>
+          <span class="toggle-label"><i data-lucide="paintbrush"></i>Highlight cell in yellow</span>
           <div class="toggle-track" id="highlightToggle"><div class="toggle-thumb"></div></div>
         </div>
         <div class="select-hint" id="selectHint">Select a port call above first</div>
