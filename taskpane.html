@@ -9,126 +9,346 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
+    /* ── Light mode (default) ── */
     :root {
-      --bg-deep:#0D1321;--bg-mid:#1D2D44;--bg-card:#3E5C76;--text-muted:#748CAB;--text-light:#F0EBD8;
-      --accent:#F0EBD8;--border:rgba(116,140,171,0.25);--border-light:rgba(240,235,216,0.12);
-      --success:#8BC99A;--success-bg:rgba(139,201,154,0.12);--warning:#E8C547;--warning-bg:rgba(232,197,71,0.10);
-      --error:#E07A5F;--error-bg:rgba(224,122,95,0.10);
+      --sidebar-bg: #f3f3f3;
+      --panel-bg: #ffffff;
+      --panel-border: rgba(0,0,0,0.08);
+      --panel-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+      --card-bg: #f7f7f5;
+      --card-border: rgba(0,0,0,0.06);
+      --card-hover: #f0f0ed;
+      --card-selected-border: rgba(62,92,118,0.4);
+      --card-selected-bg: rgba(62,92,118,0.06);
+      --text-primary: #1a1a1a;
+      --text-secondary: #6b6b6b;
+      --text-muted: #999999;
+      --accent: #3E5C76;
+      --border: rgba(0,0,0,0.08);
+      --border-light: rgba(0,0,0,0.04);
+      --input-bg: #ffffff;
+      --input-border: rgba(0,0,0,0.12);
+      --btn-bg: #1D2D44;
+      --btn-text: #F0EBD8;
+      --success: #2d8a4e;
+      --success-bg: rgba(45,138,78,0.08);
+      --warning: #b8860b;
+      --warning-bg: rgba(184,134,11,0.08);
+      --error: #c0392b;
+      --error-bg: rgba(192,57,43,0.06);
+      --tag-hhla: #3E5C76;
+      --tag-hhla-bg: rgba(62,92,118,0.1);
+      --tag-eg: #7a6842;
+      --tag-eg-bg: rgba(122,104,66,0.1);
+      --toggle-track: #d4d4d4;
+      --toggle-track-on: rgba(254,255,66,0.5);
+      --toggle-thumb: #999;
+      --toggle-thumb-on: #c8c900;
     }
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'IBM Plex Sans',-apple-system,sans-serif;background:var(--bg-deep);color:var(--text-light);overflow-x:hidden;min-height:100vh;font-size:13px;line-height:1.5;}
-    .header{background:var(--bg-mid);border-bottom:1px solid var(--border);padding:14px 16px;position:sticky;top:0;z-index:10;}
-    .header-top{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
-    .header-top svg{color:var(--text-muted);flex-shrink:0;}
-    .header-label{font-size:10px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:var(--text-muted);}
-    .vessel-name{font-size:16px;font-weight:700;color:var(--text-light);letter-spacing:-0.2px;padding-left:22px;}
-    .vessel-name.placeholder{color:var(--text-muted);font-weight:400;font-style:italic;font-size:13px;}
-    .status-bar{padding:8px 16px;font-size:12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);}
-    .status-bar.loading{background:rgba(62,92,118,0.3);color:var(--text-muted);}
-    .status-bar.error{background:var(--error-bg);color:var(--error);}
-    .status-bar.warning{background:var(--warning-bg);color:var(--warning);}
-    .status-bar.hidden{display:none;}
-    .spinner{width:13px;height:13px;border:2px solid transparent;border-top-color:var(--text-muted);border-radius:50%;animation:spin .6s linear infinite;flex-shrink:0;}
-    @keyframes spin{to{transform:rotate(360deg);}}
-    .content{padding:16px;}
-    .empty-state{text-align:center;padding:36px 16px;}
-    .empty-state svg{color:var(--text-muted);opacity:.35;margin-bottom:12px;}
-    .empty-state h3{font-size:14px;font-weight:600;color:var(--text-muted);margin-bottom:6px;}
-    .empty-state p{font-size:12px;color:var(--text-muted);line-height:1.6;max-width:220px;margin:0 auto;}
-    .section-label{font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
-    .section-label svg{width:12px;height:12px;}
-    .sources-row{display:flex;gap:6px;margin-bottom:14px;}
-    .source-badge{font-size:10px;font-weight:500;padding:3px 8px;border-radius:3px;display:flex;align-items:center;gap:4px;}
-    .source-badge svg{width:10px;height:10px;}
-    .source-badge.ok{background:var(--success-bg);color:var(--success);}
-    .source-badge.fail{background:var(--error-bg);color:var(--error);}
-    .source-badge.na{background:rgba(116,140,171,0.1);color:var(--text-muted);}
-    .call-entry{background:var(--bg-mid);border:1.5px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .15s,background .15s;}
-    .call-entry:hover{background:rgba(62,92,118,0.35);}
-    .call-entry.selected{border-color:rgba(116,140,171,0.6);background:rgba(62,92,118,0.3);}
-    .call-entry-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:7px;border-bottom:1px solid var(--border-light);}
-    .call-terminal{font-size:11px;font-weight:600;padding:2px 7px;border-radius:3px;letter-spacing:.3px;}
-    .call-terminal.hhla{color:#B8D8E8;background:rgba(91,143,168,0.25);}
-    .call-terminal.eg{color:#D4C4A0;background:rgba(139,122,94,0.25);}
-    .call-voyage{font-size:11px;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;}
-    .data-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;}
-    .data-label{font-size:12px;color:var(--text-muted);}
-    .data-value{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-light);text-align:right;}
-    .data-value.highlight{color:var(--accent);font-weight:600;}
-    .data-value.dim{color:var(--text-muted);font-style:italic;font-family:'IBM Plex Sans',sans-serif;font-size:11px;}
-    .divider{height:1px;background:var(--border);margin:16px 0;}
-    .replace-section{background:var(--bg-mid);border:1px solid var(--border);border-radius:8px;padding:14px;}
-    .replace-section h4{font-size:12px;font-weight:600;color:var(--text-light);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
-    .replace-section h4 svg{color:var(--text-muted);}
-    .input-group{margin-bottom:10px;}
-    .input-label{font-size:11px;font-weight:500;color:var(--text-muted);margin-bottom:4px;display:block;}
-    .input-field{width:100%;background:var(--bg-deep);border:1px solid var(--border);border-radius:5px;padding:8px 10px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-light);outline:none;transition:border-color .15s;}
-    .input-field:focus{border-color:var(--text-muted);}
-    .input-field::placeholder{color:var(--text-muted);opacity:.6;font-family:'IBM Plex Sans',sans-serif;font-size:12px;}
-    .input-hint{font-size:10px;color:var(--text-muted);margin-top:3px;opacity:.7;}
-    .select-hint{font-size:11px;color:var(--text-muted);text-align:center;padding:8px 0;font-style:italic;}
+
+    /* ── Dark mode ── */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --sidebar-bg: #1e1e1e;
+        --panel-bg: #252525;
+        --panel-border: rgba(255,255,255,0.06);
+        --panel-shadow: 0 1px 4px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.04);
+        --card-bg: #2c2c2c;
+        --card-border: rgba(255,255,255,0.06);
+        --card-hover: #333333;
+        --card-selected-border: rgba(116,140,171,0.5);
+        --card-selected-bg: rgba(62,92,118,0.15);
+        --text-primary: #e8e4da;
+        --text-secondary: #9a9689;
+        --text-muted: #6b675e;
+        --accent: #a8c4d8;
+        --border: rgba(255,255,255,0.06);
+        --border-light: rgba(255,255,255,0.03);
+        --input-bg: #2c2c2c;
+        --input-border: rgba(255,255,255,0.1);
+        --btn-bg: #F0EBD8;
+        --btn-text: #1D2D44;
+        --success: #7bc08a;
+        --success-bg: rgba(123,192,138,0.1);
+        --warning: #d4a843;
+        --warning-bg: rgba(212,168,67,0.1);
+        --error: #d97766;
+        --error-bg: rgba(217,119,102,0.08);
+        --tag-hhla: #8fb0c8;
+        --tag-hhla-bg: rgba(143,176,200,0.12);
+        --tag-eg: #c4b48a;
+        --tag-eg-bg: rgba(196,180,138,0.12);
+        --toggle-track: #444;
+        --toggle-track-on: rgba(254,255,66,0.3);
+        --toggle-thumb: #777;
+        --toggle-thumb-on: #e8e800;
+      }
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+      background: var(--sidebar-bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      font-size: 13px;
+      line-height: 1.5;
+      padding: 8px;
+    }
+
+    /* ── Inset rounded panel ── */
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 12px;
+      box-shadow: var(--panel-shadow);
+      min-height: calc(100vh - 16px);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Header ── */
+    .header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 5px;
+    }
+    .header-top svg { color: var(--text-muted); flex-shrink: 0; }
+    .header-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .vessel-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.2px;
+      padding-left: 22px;
+    }
+    .vessel-name.placeholder {
+      color: var(--text-muted);
+      font-weight: 400;
+      font-style: italic;
+      font-size: 13px;
+    }
+
+    /* ── Status bar ── */
+    .status-bar {
+      padding: 8px 16px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .status-bar.loading { background: var(--card-bg); color: var(--text-secondary); }
+    .status-bar.error { background: var(--error-bg); color: var(--error); }
+    .status-bar.warning { background: var(--warning-bg); color: var(--warning); }
+    .status-bar.hidden { display: none; }
+    .spinner {
+      width: 13px; height: 13px;
+      border: 2px solid transparent;
+      border-top-color: var(--text-muted);
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Content ── */
+    .content { padding: 16px; flex: 1; }
+    .empty-state { text-align: center; padding: 36px 16px; }
+    .empty-state svg { color: var(--text-muted); opacity: .3; margin-bottom: 12px; }
+    .empty-state h3 { font-size: 14px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px; }
+    .empty-state p { font-size: 12px; color: var(--text-muted); line-height: 1.6; max-width: 220px; margin: 0 auto; }
+    .section-label {
+      font-size: 10px; font-weight: 600; letter-spacing: 1.2px;
+      text-transform: uppercase; color: var(--text-muted);
+      margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+    }
+    .section-label svg { width: 12px; height: 12px; }
+    .sources-row { display: flex; gap: 6px; margin-bottom: 14px; }
+    .source-badge {
+      font-size: 10px; font-weight: 500; padding: 3px 8px;
+      border-radius: 3px; display: flex; align-items: center; gap: 4px;
+    }
+    .source-badge svg { width: 10px; height: 10px; }
+    .source-badge.ok { background: var(--success-bg); color: var(--success); }
+    .source-badge.fail { background: var(--error-bg); color: var(--error); }
+    .source-badge.na { background: var(--card-bg); color: var(--text-muted); }
+
+    /* ── Call entries ── */
+    .call-entry {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+    .call-entry:hover { background: var(--card-hover); }
+    .call-entry.selected {
+      border-color: var(--card-selected-border);
+      background: var(--card-selected-bg);
+    }
+    .call-entry-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 8px; padding-bottom: 7px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .call-terminal {
+      font-size: 11px; font-weight: 600; padding: 2px 7px;
+      border-radius: 3px; letter-spacing: .3px;
+    }
+    .call-terminal.hhla { color: var(--tag-hhla); background: var(--tag-hhla-bg); }
+    .call-terminal.eg { color: var(--tag-eg); background: var(--tag-eg-bg); }
+    .call-voyage {
+      font-size: 11px; color: var(--text-muted);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .data-row { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; }
+    .data-label { font-size: 12px; color: var(--text-secondary); }
+    .data-value {
+      font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+      color: var(--text-primary); text-align: right;
+    }
+    .data-value.highlight { color: var(--accent); font-weight: 600; }
+    .data-value.dim {
+      color: var(--text-muted); font-style: italic;
+      font-family: 'IBM Plex Sans', sans-serif; font-size: 11px;
+    }
+
+    .divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+    /* ── Replace section ── */
+    .replace-section {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .replace-section h4 {
+      font-size: 12px; font-weight: 600; color: var(--text-primary);
+      margin-bottom: 10px; display: flex; align-items: center; gap: 6px;
+    }
+    .replace-section h4 svg { color: var(--text-muted); }
+    .input-group { margin-bottom: 10px; }
+    .input-label { font-size: 11px; font-weight: 500; color: var(--text-secondary); margin-bottom: 4px; display: block; }
+    .input-field {
+      width: 100%; background: var(--input-bg); border: 1px solid var(--input-border);
+      border-radius: 5px; padding: 8px 10px;
+      font-family: 'IBM Plex Mono', monospace; font-size: 13px;
+      color: var(--text-primary); outline: none; transition: border-color .15s;
+    }
+    .input-field:focus { border-color: var(--accent); }
+    .input-field::placeholder { color: var(--text-muted); opacity: .6; font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; }
+    .input-hint { font-size: 10px; color: var(--text-muted); margin-top: 3px; opacity: .7; }
+    .select-hint { font-size: 11px; color: var(--text-muted); text-align: center; padding: 8px 0; font-style: italic; }
+
     /* ── Highlight toggle ── */
-    .toggle-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:6px 0;}
-    .toggle-label{font-size:11px;font-weight:500;color:var(--text-muted);display:flex;align-items:center;gap:6px;}
-    .toggle-label svg{width:12px;height:12px;}
-    .toggle-track{width:32px;height:18px;border-radius:9px;background:var(--border);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
-    .toggle-track.on{background:rgba(254,255,66,0.35);}
-    .toggle-thumb{width:14px;height:14px;border-radius:50%;background:var(--text-muted);position:absolute;top:2px;left:2px;transition:transform .2s,background .2s;}
-    .toggle-track.on .toggle-thumb{transform:translateX(14px);background:#FEFF42;}
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 6px 0; }
+    .toggle-label { font-size: 11px; font-weight: 500; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+    .toggle-label svg { width: 12px; height: 12px; }
+    .toggle-track {
+      width: 32px; height: 18px; border-radius: 9px;
+      background: var(--toggle-track); position: relative;
+      cursor: pointer; transition: background .2s; flex-shrink: 0;
+    }
+    .toggle-track.on { background: var(--toggle-track-on); }
+    .toggle-thumb {
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--toggle-thumb); position: absolute;
+      top: 2px; left: 2px; transition: transform .2s, background .2s;
+    }
+    .toggle-track.on .toggle-thumb { transform: translateX(14px); background: var(--toggle-thumb-on); }
+
     /* ── Button ── */
-    .replace-btn{width:100%;background:var(--text-light);border:none;border-radius:6px;padding:9px;font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;color:var(--bg-deep);cursor:pointer;transition:opacity .12s,transform .08s;display:flex;align-items:center;justify-content:center;gap:6px;}
-    .replace-btn:hover{opacity:.88;}
-    .replace-btn:active{transform:scale(.98);}
-    .replace-btn:disabled{opacity:.25;cursor:not-allowed;transform:none;}
-    .replace-result{margin-top:8px;font-size:11px;padding:7px 9px;border-radius:5px;display:none;align-items:center;gap:6px;}
-    .replace-result.show{display:flex;}
-    .replace-result svg{flex-shrink:0;width:13px;height:13px;}
-    .replace-result.success{background:var(--success-bg);color:var(--success);}
-    .replace-result.error{background:var(--error-bg);color:var(--error);}
-    .footer{padding:12px 16px;border-top:1px solid var(--border);text-align:center;}
-    .footer-text{font-size:10px;color:var(--text-muted);opacity:.6;letter-spacing:.3px;}
-    ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg-deep);}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+    .replace-btn {
+      width: 100%; background: var(--btn-bg); border: none;
+      border-radius: 6px; padding: 9px;
+      font-family: 'IBM Plex Sans', sans-serif; font-size: 12px;
+      font-weight: 600; color: var(--btn-text); cursor: pointer;
+      transition: opacity .12s, transform .08s;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .replace-btn:hover { opacity: .88; }
+    .replace-btn:active { transform: scale(.98); }
+    .replace-btn:disabled { opacity: .25; cursor: not-allowed; transform: none; }
+    .replace-result {
+      margin-top: 8px; font-size: 11px; padding: 7px 9px;
+      border-radius: 5px; display: none; align-items: center; gap: 6px;
+    }
+    .replace-result.show { display: flex; }
+    .replace-result svg { flex-shrink: 0; width: 13px; height: 13px; }
+    .replace-result.success { background: var(--success-bg); color: var(--success); }
+    .replace-result.error { background: var(--error-bg); color: var(--error); }
+
+    /* ── Footer ── */
+    .footer {
+      padding: 10px 16px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .footer-text { font-size: 10px; color: var(--text-muted); opacity: .5; letter-spacing: .5px; font-weight: 500; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
   </style>
 </head>
 <body>
-  <div class="header">
-    <div class="header-top"><i data-lucide="anchor" style="width:14px;height:14px;"></i><span class="header-label">Vessel</span></div>
-    <div class="vessel-name placeholder" id="vesselNameDisplay">Select a vessel name...</div>
-  </div>
-  <div class="status-bar hidden" id="statusBar"><div class="spinner" id="statusSpinner"></div><span id="statusText"></span></div>
-  <div class="content" id="mainContent">
-    <div class="empty-state" id="emptyState">
-      <i data-lucide="ship" style="width:44px;height:44px;"></i>
-      <h3>No vessel selected</h3>
-      <p>Highlight cells containing a vessel name in your sheet. Tracking starts automatically.</p>
+  <div class="panel">
+    <div class="header">
+      <div class="header-top"><i data-lucide="anchor" style="width:14px;height:14px;"></i><span class="header-label">Vessel</span></div>
+      <div class="vessel-name placeholder" id="vesselNameDisplay">Select a vessel name...</div>
     </div>
-    <div id="vesselData" style="display:none;">
-      <div class="sources-row" id="sourceBadges"></div>
-      <div class="data-section">
-        <div class="section-label"><i data-lucide="calendar-clock"></i>Port Calls</div>
-        <div id="callEntries"></div>
+    <div class="status-bar hidden" id="statusBar"><div class="spinner" id="statusSpinner"></div><span id="statusText"></span></div>
+    <div class="content" id="mainContent">
+      <div class="empty-state" id="emptyState">
+        <i data-lucide="ship" style="width:44px;height:44px;"></i>
+        <h3>No vessel selected</h3>
+        <p>Highlight cells containing a vessel name in your sheet. Tracking starts automatically.</p>
       </div>
-      <div class="divider"></div>
-      <div class="replace-section">
-        <h4><i data-lucide="replace" style="width:14px;height:14px;"></i>Replace ETA in column</h4>
-        <div class="input-group">
-          <label class="input-label">Target column letter</label>
-          <input type="text" class="input-field" id="columnInput" placeholder="e.g. D" maxlength="3" />
-          <div class="input-hint">Saved automatically. Writes in the existing cell's date format.</div>
+      <div id="vesselData" style="display:none;">
+        <div class="sources-row" id="sourceBadges"></div>
+        <div class="data-section">
+          <div class="section-label"><i data-lucide="calendar-clock"></i>Port Calls</div>
+          <div id="callEntries"></div>
         </div>
-        <div class="toggle-row">
-          <span class="toggle-label"><i data-lucide="paintbrush"></i>Highlight cell in yellow</span>
-          <div class="toggle-track" id="highlightToggle"><div class="toggle-thumb"></div></div>
+        <div class="divider"></div>
+        <div class="replace-section">
+          <h4><i data-lucide="replace" style="width:14px;height:14px;"></i>Replace ETA in column</h4>
+          <div class="input-group">
+            <label class="input-label">Target column letter</label>
+            <input type="text" class="input-field" id="columnInput" placeholder="e.g. D" maxlength="3" />
+            <div class="input-hint">Saved automatically. Writes in the existing cell's date format.</div>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label"><i data-lucide="paintbrush"></i>Highlight cell in yellow</span>
+            <div class="toggle-track" id="highlightToggle"><div class="toggle-thumb"></div></div>
+          </div>
+          <div class="select-hint" id="selectHint">Select a port call above first</div>
+          <button class="replace-btn" id="replaceBtn" disabled>
+            <i data-lucide="arrow-right-left" style="width:13px;height:13px;"></i>Replace ETA in selected rows
+          </button>
+          <div class="replace-result" id="replaceResult"><i data-lucide="check"></i><span id="replaceResultText"></span></div>
         </div>
-        <div class="select-hint" id="selectHint">Select a port call above first</div>
-        <button class="replace-btn" id="replaceBtn" disabled>
-          <i data-lucide="arrow-right-left" style="width:13px;height:13px;"></i>Replace ETA in selected rows
-        </button>
-        <div class="replace-result" id="replaceResult"><i data-lucide="check"></i><span id="replaceResultText"></span></div>
       </div>
     </div>
+    <div class="footer"><div class="footer-text">HVT</div></div>
   </div>
-  <div class="footer"><div class="footer-text">Hamburg Vessel Tracker v1.3</div></div>
 
 <script>
 const PROXY_URL = "https://hamburg-vessel-proxy.begemanncolin.workers.dev/api/sailing-list";
@@ -149,12 +369,9 @@ Office.onReady(function(info) {
     if (saved) document.getElementById("columnInput").value = saved;
     highlightOn = localStorage.getItem(STORAGE_HL) === "true";
     updateToggleUI();
-
     document.getElementById("columnInput").addEventListener("input", function() {
       var v = this.value.toUpperCase().replace(/[^A-Z]/g, "");
-      this.value = v;
-      localStorage.setItem(STORAGE_KEY, v);
-      updateUI();
+      this.value = v; localStorage.setItem(STORAGE_KEY, v); updateUI();
     });
     document.getElementById("highlightToggle").addEventListener("click", function() {
       highlightOn = !highlightOn;
@@ -171,8 +388,8 @@ Office.onReady(function(info) {
 });
 
 function updateToggleUI() {
-  var track = document.getElementById("highlightToggle");
-  if (highlightOn) track.classList.add("on"); else track.classList.remove("on");
+  var t = document.getElementById("highlightToggle");
+  if (highlightOn) t.classList.add("on"); else t.classList.remove("on");
 }
 
 function onSelectionChanged() {
@@ -213,8 +430,7 @@ function showMultiError() {
   document.getElementById("vesselNameDisplay").classList.remove("placeholder");
   document.getElementById("emptyState").style.display = "none";
   document.getElementById("vesselData").style.display = "none";
-  showStatus("warning", "Can only track one vessel at a time.");
-  updateUI();
+  showStatus("warning", "Can only track one vessel at a time."); updateUI();
 }
 function showStatus(type, msg) {
   var bar = document.getElementById("statusBar");
@@ -267,7 +483,7 @@ function fetchData() {
 function fetchDirect() {
   return fetch(COAST_DIRECT).then(function(r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
   .then(function(json) {
-    var vessels = []; function walk(o) {
+    var vessels = []; (function walk(o) {
       if (Array.isArray(o)) { if (o.length > 0 && typeof o[0] === "object" && o[0] !== null) {
         var keys = Object.keys(o[0]); if (keys.some(function(k) { return k.toLowerCase().indexOf("schiff") !== -1 || k.toLowerCase().indexOf("vessel") !== -1; })) {
           o.forEach(function(item) { var f = function(ks) { for (var i=0;i<ks.length;i++) if (item[ks[i]] != null && item[ks[i]] !== "") return item[ks[i]]; return null; };
@@ -275,9 +491,8 @@ function fetchDirect() {
               ata:f(["schiffabfertigung.ankunftistzeitpunkt","terminalAta"]), etd:f(["schiffabfertigung.abfahrtsollzeitpunkt","terminalEtd"]),
               atd:f(["schiffabfertigung.abfahrtistzeitpunkt","terminalAtd"]), terminal:f(["schiffabfertigung.terminal","facilityName"]),
               voyageIn:f(["schiffabfertigung.importreise","carrierVoyageDischargeNumber"]), voyageOut:f(["schiffabfertigung.exportreise","carrierVoyageLoadNumber"]), source:"HHLA" });
-          }); return; } } o.forEach(walk); } else if (typeof o === "object" && o !== null) Object.values(o).forEach(walk); }
-    walk(json);
-    var data = { vessels:vessels, sources:{hhla:"ok",eurogate:"unavailable"}, timestamp:new Date().toISOString() };
+          }); return; } } o.forEach(walk); } else if (typeof o === "object" && o !== null) Object.values(o).forEach(walk); })(json);
+    var data = { vessels:vessels, sources:{hhla_coast:"ok"}, timestamp:new Date().toISOString() };
     cachedData = data; cacheTs = Date.now(); return data;
   }).catch(function() { return null; });
 }
@@ -288,7 +503,7 @@ function renderVesselData(matches, sources) {
   matches.forEach(function(m, idx) {
     var isEG = (m.terminal||"").indexOf("Eurogate") !== -1, termClass = isEG ? "eg" : "hhla";
     var termLabel = m.terminal || "Hamburg";
-    if (m.berth) termLabel += " — " + m.berth;
+    if (m.berth) termLabel += " \u2014 " + m.berth;
     var voyage = m.voyageIn || m.voyageOut || "";
     var div = document.createElement("div"); div.className = "call-entry"; div.setAttribute("data-idx", idx);
     div.innerHTML =
@@ -304,8 +519,7 @@ function selectCall(idx) {
   selectedCallIdx = idx;
   document.querySelectorAll(".call-entry").forEach(function(el) { el.classList.remove("selected"); });
   var sel = document.querySelector('.call-entry[data-idx="'+idx+'"]');
-  if (sel) sel.classList.add("selected");
-  updateUI();
+  if (sel) sel.classList.add("selected"); updateUI();
 }
 function renderSourceBadges(sources, matches) {
   if (!sources) return;
@@ -332,24 +546,21 @@ function fmtDT(iso) {
 }
 function esc(s) { return s?String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"):""; }
 
-// ── Replace ETA ──
 function handleReplace() {
   var col = document.getElementById("columnInput").value.trim().toUpperCase();
   if (!col || selectedCallIdx < 0) return;
   var match = currentMatches[selectedCallIdx];
   if (!match || !match.eta) return;
-
   var btn = document.getElementById("replaceBtn");
   var res = document.getElementById("replaceResult");
   btn.disabled = true; res.className = "replace-result"; res.style.display = "none";
-
   Excel.run(function(ctx) {
     var sel = ctx.workbook.getSelectedRange();
     sel.load("rowIndex, rowCount, address");
     return ctx.sync().then(function() {
       var sheet = ctx.workbook.worksheets.getItem(sel.address.split("!")[0].replace(/'/g, ""));
       var start = sel.rowIndex, count = sel.rowCount, cells = [];
-      for (var i = 0; i < count; i++) { var c = sheet.getRange(col + (start+i+1)); c.load("numberFormat, values, format/fill"); cells.push(c); }
+      for (var i = 0; i < count; i++) { var c = sheet.getRange(col + (start+i+1)); c.load("numberFormat, values"); cells.push(c); }
       return ctx.sync().then(function() {
         var etaDate = new Date(match.eta), n = 0;
         for (var i = 0; i < cells.length; i++) {
@@ -357,7 +568,7 @@ function handleReplace() {
           var ef = (cell.numberFormat&&cell.numberFormat[0])?(cell.numberFormat[0][0]||""):"";
           var ev = (cell.values&&cell.values[0])?String(cell.values[0][0]):"";
           cell.values = [[formatLike(etaDate, ev, ef)]];
-          if (highlightOn) { cell.format.fill.color = HIGHLIGHT_COLOR; }
+          if (highlightOn) cell.format.fill.color = HIGHLIGHT_COLOR;
           n++;
         }
         return ctx.sync().then(function() {
