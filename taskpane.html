@@ -286,8 +286,9 @@ function renderVesselData(matches, sources) {
   renderSourceBadges(sources, matches);
   var container = document.getElementById("callEntries"); container.innerHTML = "";
   matches.forEach(function(m, idx) {
-    var isEG = m.source === "Eurogate", termClass = isEG ? "eg" : "hhla";
-    var termLabel = m.terminal || (isEG ? "Eurogate" : "HHLA");
+    var isEG = (m.terminal||"").indexOf("Eurogate") !== -1, termClass = isEG ? "eg" : "hhla";
+    var termLabel = m.terminal || "Hamburg";
+    if (m.berth) termLabel += " — " + m.berth;
     var voyage = m.voyageIn || m.voyageOut || "";
     var div = document.createElement("div"); div.className = "call-entry"; div.setAttribute("data-idx", idx);
     div.innerHTML =
@@ -308,13 +309,15 @@ function selectCall(idx) {
 }
 function renderSourceBadges(sources, matches) {
   if (!sources) return;
-  var ms = (matches || []).map(function(m) { return m.source; });
-  var hH = ms.indexOf("HHLA") !== -1, hE = ms.indexOf("Eurogate") !== -1, html = "";
-  if (sources.hhla === "ok") html += '<span class="source-badge '+(hH?"ok":"na")+'"><i data-lucide="'+(hH?"check-circle":"minus-circle")+'"></i>HHLA'+(hH?"":" (no match)")+'</span>';
-  else html += '<span class="source-badge fail"><i data-lucide="x-circle"></i>HHLA</span>';
-  if (sources.eurogate === "ok") html += '<span class="source-badge '+(hE?"ok":"na")+'"><i data-lucide="'+(hE?"check-circle":"minus-circle")+'"></i>Eurogate'+(hE?"":" (no match)")+'</span>';
-  else if (sources.eurogate === "unavailable") html += '<span class="source-badge na"><i data-lucide="minus-circle"></i>Eurogate (proxy needed)</span>';
-  else html += '<span class="source-badge fail"><i data-lucide="x-circle"></i>Eurogate</span>';
+  var hasMatch = (matches || []).length > 0;
+  var html = "";
+  if (sources.hafenhamburg === "ok") {
+    html += '<span class="source-badge '+(hasMatch?"ok":"na")+'"><i data-lucide="'+(hasMatch?"check-circle":"minus-circle")+'"></i>HVCC data'+(hasMatch?"":" (no match)")+'</span>';
+  } else if (sources.hhla_coast === "ok") {
+    html += '<span class="source-badge '+(hasMatch?"ok":"na")+'"><i data-lucide="'+(hasMatch?"check-circle":"minus-circle")+'"></i>HHLA only'+(hasMatch?"":" (no match)")+'</span>';
+  } else {
+    html += '<span class="source-badge fail"><i data-lucide="x-circle"></i>No data source available</span>';
+  }
   document.getElementById("sourceBadges").innerHTML = html; lucide.createIcons();
 }
 function dataRow(label, value, hl) {
