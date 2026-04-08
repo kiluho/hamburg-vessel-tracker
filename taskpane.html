@@ -10,453 +10,172 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg-deep:    #0D1321;
-      --bg-mid:     #1D2D44;
-      --bg-card:    #3E5C76;
-      --text-muted: #748CAB;
-      --text-light: #F0EBD8;
-      --accent:     #F0EBD8;
-      --accent-dim: #748CAB;
-      --border:     rgba(116, 140, 171, 0.25);
-      --border-light: rgba(240, 235, 216, 0.12);
-      --success:    #8BC99A;
-      --success-bg: rgba(139, 201, 154, 0.12);
-      --warning:    #E8C547;
-      --warning-bg: rgba(232, 197, 71, 0.10);
-      --error:      #E07A5F;
-      --error-bg:   rgba(224, 122, 95, 0.10);
-      --tag-hhla:   #5B8FA8;
-      --tag-eg:     #8B7A5E;
+      --bg-deep:#0D1321;--bg-mid:#1D2D44;--bg-card:#3E5C76;--text-muted:#748CAB;--text-light:#F0EBD8;
+      --accent:#F0EBD8;--border:rgba(116,140,171,0.25);--border-light:rgba(240,235,216,0.12);
+      --success:#8BC99A;--success-bg:rgba(139,201,154,0.12);--warning:#E8C547;--warning-bg:rgba(232,197,71,0.10);
+      --error:#E07A5F;--error-bg:rgba(224,122,95,0.10);
     }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'IBM Plex Sans', -apple-system, sans-serif;
-      background: var(--bg-deep);
-      color: var(--text-light);
-      overflow-x: hidden;
-      min-height: 100vh;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    /* ── Header ── */
-    .header {
-      background: var(--bg-mid);
-      border-bottom: 1px solid var(--border);
-      padding: 14px 16px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .header-top {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 6px;
-    }
-
-    .header-top svg { color: var(--text-muted); flex-shrink: 0; }
-
-    .header-label {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 1.6px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
-
-    .vessel-name {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text-light);
-      letter-spacing: -0.2px;
-      padding-left: 22px;
-    }
-
-    .vessel-name.placeholder {
-      color: var(--text-muted);
-      font-weight: 400;
-      font-style: italic;
-      font-size: 13px;
-    }
-
-    /* ── Status bar ── */
-    .status-bar {
-      padding: 8px 16px;
-      font-size: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      border-bottom: 1px solid var(--border);
-    }
-    .status-bar.loading { background: rgba(62, 92, 118, 0.3); color: var(--text-muted); }
-    .status-bar.error   { background: var(--error-bg); color: var(--error); }
-    .status-bar.warning { background: var(--warning-bg); color: var(--warning); }
-    .status-bar.success { background: var(--success-bg); color: var(--success); }
-    .status-bar.hidden  { display: none; }
-
-    .spinner {
-      width: 13px; height: 13px;
-      border: 2px solid transparent;
-      border-top-color: var(--text-muted);
-      border-radius: 50%;
-      animation: spin 0.6s linear infinite;
-      flex-shrink: 0;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── Content ── */
-    .content { padding: 16px; }
-
-    .empty-state {
-      text-align: center;
-      padding: 36px 16px;
-    }
-    .empty-state svg {
-      color: var(--text-muted);
-      opacity: 0.35;
-      margin-bottom: 12px;
-    }
-    .empty-state h3 {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
-    .empty-state p {
-      font-size: 12px;
-      color: var(--accent-dim);
-      line-height: 1.6;
-      max-width: 220px;
-      margin: 0 auto;
-    }
-
-    /* ── Section labels ── */
-    .section-label {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .section-label svg { width: 12px; height: 12px; }
-
-    /* ── Call entries ── */
-    .call-entry {
-      background: var(--bg-mid);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 14px;
-      margin-bottom: 8px;
-    }
-
-    .call-entry-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-      padding-bottom: 7px;
-      border-bottom: 1px solid var(--border-light);
-    }
-
-    .call-terminal {
-      font-size: 11px;
-      font-weight: 600;
-      padding: 2px 7px;
-      border-radius: 3px;
-      letter-spacing: 0.3px;
-    }
-    .call-terminal.hhla  { color: #B8D8E8; background: rgba(91, 143, 168, 0.25); }
-    .call-terminal.eg    { color: #D4C4A0; background: rgba(139, 122, 94, 0.25); }
-
-    .call-voyage {
-      font-size: 11px;
-      color: var(--text-muted);
-      font-family: 'IBM Plex Mono', monospace;
-    }
-
-    .data-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 3px 0;
-    }
-
-    .data-label {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .data-value {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 12px;
-      color: var(--text-light);
-      text-align: right;
-    }
-    .data-value.highlight { color: var(--accent); font-weight: 600; }
-    .data-value.dim {
-      color: var(--text-muted);
-      font-style: italic;
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 11px;
-    }
-
-    /* ── Source badges ── */
-    .sources-row {
-      display: flex;
-      gap: 6px;
-      margin-top: 14px;
-      margin-bottom: 14px;
-    }
-    .source-badge {
-      font-size: 10px;
-      font-weight: 500;
-      padding: 3px 8px;
-      border-radius: 3px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .source-badge svg { width: 10px; height: 10px; }
-    .source-badge.ok   { background: var(--success-bg); color: var(--success); }
-    .source-badge.fail { background: var(--error-bg); color: var(--error); }
-
-    /* ── Divider ── */
-    .divider { height: 1px; background: var(--border); margin: 16px 0; }
-
-    /* ── Replace section ── */
-    .replace-section {
-      background: var(--bg-mid);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px;
-    }
-    .replace-section h4 {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-light);
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .replace-section h4 svg { color: var(--text-muted); }
-
-    .input-group { margin-bottom: 10px; }
-    .input-label {
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-      display: block;
-    }
-    .input-field {
-      width: 100%;
-      background: var(--bg-deep);
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      padding: 8px 10px;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 13px;
-      color: var(--text-light);
-      outline: none;
-      transition: border-color 0.15s;
-    }
-    .input-field:focus { border-color: var(--text-muted); }
-    .input-field::placeholder {
-      color: var(--text-muted);
-      opacity: 0.6;
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 12px;
-    }
-    .input-hint {
-      font-size: 10px;
-      color: var(--text-muted);
-      margin-top: 3px;
-      opacity: 0.7;
-    }
-
-    .replace-btn {
-      width: 100%;
-      background: var(--text-light);
-      border: none;
-      border-radius: 6px;
-      padding: 9px;
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--bg-deep);
-      cursor: pointer;
-      transition: opacity 0.12s, transform 0.08s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-    .replace-btn:hover { opacity: 0.88; }
-    .replace-btn:active { transform: scale(0.98); }
-    .replace-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
-
-    .replace-result {
-      margin-top: 8px;
-      font-size: 11px;
-      padding: 7px 9px;
-      border-radius: 5px;
-      display: none;
-    }
-    .replace-result.show { display: flex; align-items: center; gap: 6px; }
-    .replace-result svg { flex-shrink: 0; width: 13px; height: 13px; }
-    .replace-result.success { background: var(--success-bg); color: var(--success); }
-    .replace-result.error { background: var(--error-bg); color: var(--error); }
-
-    /* ── Footer ── */
-    .footer {
-      padding: 12px 16px;
-      border-top: 1px solid var(--border);
-      text-align: center;
-    }
-    .footer-text {
-      font-size: 10px;
-      color: var(--text-muted);
-      opacity: 0.6;
-      letter-spacing: 0.3px;
-    }
-
-    /* ── Scrollbar ── */
-    ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-track { background: var(--bg-deep); }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'IBM Plex Sans',-apple-system,sans-serif;background:var(--bg-deep);color:var(--text-light);overflow-x:hidden;min-height:100vh;font-size:13px;line-height:1.5;}
+    .header{background:var(--bg-mid);border-bottom:1px solid var(--border);padding:14px 16px;position:sticky;top:0;z-index:10;}
+    .header-top{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+    .header-top svg{color:var(--text-muted);flex-shrink:0;}
+    .header-label{font-size:10px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:var(--text-muted);}
+    .vessel-name{font-size:16px;font-weight:700;color:var(--text-light);letter-spacing:-0.2px;padding-left:22px;}
+    .vessel-name.placeholder{color:var(--text-muted);font-weight:400;font-style:italic;font-size:13px;}
+    .status-bar{padding:8px 16px;font-size:12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);}
+    .status-bar.loading{background:rgba(62,92,118,0.3);color:var(--text-muted);}
+    .status-bar.error{background:var(--error-bg);color:var(--error);}
+    .status-bar.warning{background:var(--warning-bg);color:var(--warning);}
+    .status-bar.hidden{display:none;}
+    .spinner{width:13px;height:13px;border:2px solid transparent;border-top-color:var(--text-muted);border-radius:50%;animation:spin .6s linear infinite;flex-shrink:0;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .content{padding:16px;}
+    .empty-state{text-align:center;padding:36px 16px;}
+    .empty-state svg{color:var(--text-muted);opacity:.35;margin-bottom:12px;}
+    .empty-state h3{font-size:14px;font-weight:600;color:var(--text-muted);margin-bottom:6px;}
+    .empty-state p{font-size:12px;color:var(--text-muted);line-height:1.6;max-width:220px;margin:0 auto;}
+    .section-label{font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+    .section-label svg{width:12px;height:12px;}
+    .sources-row{display:flex;gap:6px;margin-bottom:14px;}
+    .source-badge{font-size:10px;font-weight:500;padding:3px 8px;border-radius:3px;display:flex;align-items:center;gap:4px;}
+    .source-badge svg{width:10px;height:10px;}
+    .source-badge.ok{background:var(--success-bg);color:var(--success);}
+    .source-badge.fail{background:var(--error-bg);color:var(--error);}
+    .source-badge.na{background:rgba(116,140,171,0.1);color:var(--text-muted);}
+    .call-entry{background:var(--bg-mid);border:1.5px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .15s,background .15s;}
+    .call-entry:hover{background:rgba(62,92,118,0.35);}
+    .call-entry.selected{border-color:rgba(116,140,171,0.6);background:rgba(62,92,118,0.3);}
+    .call-entry-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:7px;border-bottom:1px solid var(--border-light);}
+    .call-terminal{font-size:11px;font-weight:600;padding:2px 7px;border-radius:3px;letter-spacing:.3px;}
+    .call-terminal.hhla{color:#B8D8E8;background:rgba(91,143,168,0.25);}
+    .call-terminal.eg{color:#D4C4A0;background:rgba(139,122,94,0.25);}
+    .call-voyage{font-size:11px;color:var(--text-muted);font-family:'IBM Plex Mono',monospace;}
+    .data-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;}
+    .data-label{font-size:12px;color:var(--text-muted);}
+    .data-value{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-light);text-align:right;}
+    .data-value.highlight{color:var(--accent);font-weight:600;}
+    .data-value.dim{color:var(--text-muted);font-style:italic;font-family:'IBM Plex Sans',sans-serif;font-size:11px;}
+    .divider{height:1px;background:var(--border);margin:16px 0;}
+    .replace-section{background:var(--bg-mid);border:1px solid var(--border);border-radius:8px;padding:14px;}
+    .replace-section h4{font-size:12px;font-weight:600;color:var(--text-light);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+    .replace-section h4 svg{color:var(--text-muted);}
+    .input-group{margin-bottom:10px;}
+    .input-label{font-size:11px;font-weight:500;color:var(--text-muted);margin-bottom:4px;display:block;}
+    .input-field{width:100%;background:var(--bg-deep);border:1px solid var(--border);border-radius:5px;padding:8px 10px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--text-light);outline:none;transition:border-color .15s;}
+    .input-field:focus{border-color:var(--text-muted);}
+    .input-field::placeholder{color:var(--text-muted);opacity:.6;font-family:'IBM Plex Sans',sans-serif;font-size:12px;}
+    .input-hint{font-size:10px;color:var(--text-muted);margin-top:3px;opacity:.7;}
+    .select-hint{font-size:11px;color:var(--text-muted);text-align:center;padding:8px 0;font-style:italic;}
+    /* ── Highlight toggle ── */
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:6px 0;}
+    .toggle-label{font-size:11px;font-weight:500;color:var(--text-muted);display:flex;align-items:center;gap:6px;}
+    .toggle-label svg{width:12px;height:12px;}
+    .toggle-swatch{width:10px;height:10px;border-radius:2px;background:#FEFF42;flex-shrink:0;}
+    .toggle-track{width:32px;height:18px;border-radius:9px;background:var(--border);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+    .toggle-track.on{background:rgba(254,255,66,0.35);}
+    .toggle-thumb{width:14px;height:14px;border-radius:50%;background:var(--text-muted);position:absolute;top:2px;left:2px;transition:transform .2s,background .2s;}
+    .toggle-track.on .toggle-thumb{transform:translateX(14px);background:#FEFF42;}
+    /* ── Button ── */
+    .replace-btn{width:100%;background:var(--text-light);border:none;border-radius:6px;padding:9px;font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:600;color:var(--bg-deep);cursor:pointer;transition:opacity .12s,transform .08s;display:flex;align-items:center;justify-content:center;gap:6px;}
+    .replace-btn:hover{opacity:.88;}
+    .replace-btn:active{transform:scale(.98);}
+    .replace-btn:disabled{opacity:.25;cursor:not-allowed;transform:none;}
+    .replace-result{margin-top:8px;font-size:11px;padding:7px 9px;border-radius:5px;display:none;align-items:center;gap:6px;}
+    .replace-result.show{display:flex;}
+    .replace-result svg{flex-shrink:0;width:13px;height:13px;}
+    .replace-result.success{background:var(--success-bg);color:var(--success);}
+    .replace-result.error{background:var(--error-bg);color:var(--error);}
+    .footer{padding:12px 16px;border-top:1px solid var(--border);text-align:center;}
+    .footer-text{font-size:10px;color:var(--text-muted);opacity:.6;letter-spacing:.3px;}
+    ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg-deep);}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
   </style>
 </head>
 <body>
-
-  <!-- Header -->
   <div class="header">
-    <div class="header-top">
-      <i data-lucide="anchor" style="width:14px;height:14px;"></i>
-      <span class="header-label">Vessel</span>
-    </div>
+    <div class="header-top"><i data-lucide="anchor" style="width:14px;height:14px;"></i><span class="header-label">Vessel</span></div>
     <div class="vessel-name placeholder" id="vesselNameDisplay">Select a vessel name...</div>
   </div>
-
-  <!-- Status bar -->
-  <div class="status-bar hidden" id="statusBar">
-    <div class="spinner" id="statusSpinner"></div>
-    <span id="statusText"></span>
-  </div>
-
-  <!-- Main content -->
+  <div class="status-bar hidden" id="statusBar"><div class="spinner" id="statusSpinner"></div><span id="statusText"></span></div>
   <div class="content" id="mainContent">
-
-    <!-- Empty state -->
     <div class="empty-state" id="emptyState">
       <i data-lucide="ship" style="width:44px;height:44px;"></i>
       <h3>No vessel selected</h3>
       <p>Highlight cells containing a vessel name in your sheet. Tracking starts automatically.</p>
     </div>
-
-    <!-- Vessel data -->
     <div id="vesselData" style="display:none;">
-
-      <!-- Source status -->
       <div class="sources-row" id="sourceBadges"></div>
-
-      <!-- Port call entries -->
       <div class="data-section">
-        <div class="section-label">
-          <i data-lucide="calendar-clock"></i>
-          Port Calls
-        </div>
+        <div class="section-label"><i data-lucide="calendar-clock"></i>Port Calls</div>
         <div id="callEntries"></div>
       </div>
-
       <div class="divider"></div>
-
-      <!-- Replace ETA -->
       <div class="replace-section">
-        <h4>
-          <i data-lucide="replace" style="width:14px;height:14px;"></i>
-          Replace ETA in column
-        </h4>
+        <h4><i data-lucide="replace" style="width:14px;height:14px;"></i>Replace ETA in column</h4>
         <div class="input-group">
           <label class="input-label">Target column letter</label>
           <input type="text" class="input-field" id="columnInput" placeholder="e.g. D" maxlength="3" />
           <div class="input-hint">Saved automatically. Writes in the existing cell's date format.</div>
         </div>
-        <button class="replace-btn" id="replaceBtn" disabled>
-          <i data-lucide="arrow-right-left" style="width:13px;height:13px;"></i>
-          Replace ETA in selected rows
-        </button>
-        <div class="replace-result" id="replaceResult">
-          <i data-lucide="check"></i>
-          <span id="replaceResultText"></span>
+        <div class="toggle-row">
+          <span class="toggle-label"><i data-lucide="paintbrush"></i>Highlight cell in yellow <span class="toggle-swatch"></span></span>
+          <div class="toggle-track" id="highlightToggle"><div class="toggle-thumb"></div></div>
         </div>
+        <div class="select-hint" id="selectHint">Select a port call above first</div>
+        <button class="replace-btn" id="replaceBtn" disabled>
+          <i data-lucide="arrow-right-left" style="width:13px;height:13px;"></i>Replace ETA in selected rows
+        </button>
+        <div class="replace-result" id="replaceResult"><i data-lucide="check"></i><span id="replaceResultText"></span></div>
       </div>
     </div>
   </div>
-
-  <!-- Footer -->
-  <div class="footer">
-    <div class="footer-text">Hamburg Vessel Tracker v1.1 &middot; HHLA + Eurogate</div>
-  </div>
+  <div class="footer"><div class="footer-text">Hamburg Vessel Tracker v1.3</div></div>
 
 <script>
-/* ══════════════════════════════════════════════
-   Hamburg Vessel Tracker — Excel Add-in
-   Sources: HHLA COAST + Eurogate (via proxy)
-   ══════════════════════════════════════════════ */
-
-// ── CONFIGURATION ──
-// Change this to your deployed Cloudflare Worker URL:
 const PROXY_URL = "https://hamburg-vessel-proxy.begemanncolin.workers.dev/api/sailing-list";
-// Fallback: direct HHLA COAST call (no Eurogate)
 const COAST_DIRECT = "https://coast.hhla.de/api/execute-report/Standard-Report-Segelliste";
-
 const STORAGE_KEY = "hvt_eta_column";
+const STORAGE_HL = "hvt_highlight";
+const HIGHLIGHT_COLOR = "#FEFF42";
 
-let cachedData = null;
-let cacheTs = 0;
+let cachedData = null, cacheTs = 0;
 const CACHE_TTL = 60000;
-let currentVesselName = null;
-let currentMatches = [];
-let currentEta = null;
-let proxyAvailable = null; // null = unknown, true/false after first try
+let currentVesselName = null, currentMatches = [], selectedCallIdx = -1, proxyAvailable = null;
+let highlightOn = false;
 
-// ── Office Init ──
 Office.onReady(function(info) {
   if (info.host === Office.HostType.Excel) {
     lucide.createIcons();
-
     var saved = localStorage.getItem(STORAGE_KEY);
     if (saved) document.getElementById("columnInput").value = saved;
+    highlightOn = localStorage.getItem(STORAGE_HL) === "true";
+    updateToggleUI();
 
     document.getElementById("columnInput").addEventListener("input", function() {
       var v = this.value.toUpperCase().replace(/[^A-Z]/g, "");
       this.value = v;
       localStorage.setItem(STORAGE_KEY, v);
-      updateReplaceBtn();
+      updateUI();
     });
-
+    document.getElementById("highlightToggle").addEventListener("click", function() {
+      highlightOn = !highlightOn;
+      localStorage.setItem(STORAGE_HL, highlightOn ? "true" : "false");
+      updateToggleUI();
+    });
     document.getElementById("replaceBtn").addEventListener("click", handleReplace);
-
     Excel.run(function(ctx) {
       ctx.workbook.worksheets.getActiveWorksheet().onSelectionChanged.add(onSelectionChanged);
       return ctx.sync();
     }).catch(function() {});
-
     onSelectionChanged();
   }
 });
 
-// ── Selection ──
+function updateToggleUI() {
+  var track = document.getElementById("highlightToggle");
+  if (highlightOn) track.classList.add("on"); else track.classList.remove("on");
+}
+
 function onSelectionChanged() {
   Excel.run(function(ctx) {
     var r = ctx.workbook.getSelectedRange();
@@ -468,43 +187,36 @@ function onSelectionChanged() {
 function processSelection(range) {
   var vals = range.values;
   if (!vals || !vals.length) { showEmpty(); return; }
-
   var cells = [];
   for (var r = 0; r < vals.length; r++)
     for (var c = 0; c < vals[r].length; c++) {
       var v = String(vals[r][c]).trim();
       if (v && v !== "undefined" && v !== "null" && v !== "0") cells.push(v);
     }
-
   if (!cells.length) { showEmpty(); return; }
-
   var norm = cells.map(function(s) { return s.toUpperCase(); });
   var uniq = Array.from(new Set(norm));
   if (uniq.length > 1) { showMultiError(); return; }
-
   lookupVessel(cells[0]);
 }
 
-// ── UI State ──
 function showEmpty() {
-  currentVesselName = null; currentMatches = []; currentEta = null;
+  currentVesselName = null; currentMatches = []; selectedCallIdx = -1;
   document.getElementById("vesselNameDisplay").textContent = "Select a vessel name...";
   document.getElementById("vesselNameDisplay").classList.add("placeholder");
   document.getElementById("emptyState").style.display = "block";
   document.getElementById("vesselData").style.display = "none";
-  hideStatus(); updateReplaceBtn();
+  hideStatus(); updateUI();
 }
-
 function showMultiError() {
-  currentVesselName = null; currentMatches = []; currentEta = null;
+  currentVesselName = null; currentMatches = []; selectedCallIdx = -1;
   document.getElementById("vesselNameDisplay").textContent = "Multiple names selected";
   document.getElementById("vesselNameDisplay").classList.remove("placeholder");
   document.getElementById("emptyState").style.display = "none";
   document.getElementById("vesselData").style.display = "none";
   showStatus("warning", "Can only track one vessel at a time.");
-  updateReplaceBtn();
+  updateUI();
 }
-
 function showStatus(type, msg) {
   var bar = document.getElementById("statusBar");
   bar.className = "status-bar " + type;
@@ -512,281 +224,162 @@ function showStatus(type, msg) {
   document.getElementById("statusText").textContent = msg;
 }
 function hideStatus() { document.getElementById("statusBar").className = "status-bar hidden"; }
-function updateReplaceBtn() {
-  document.getElementById("replaceBtn").disabled = !(document.getElementById("columnInput").value.trim() && currentEta);
+function updateUI() {
+  var hasCol = document.getElementById("columnInput").value.trim().length > 0;
+  var hasSel = selectedCallIdx >= 0 && selectedCallIdx < currentMatches.length;
+  document.getElementById("replaceBtn").disabled = !(hasCol && hasSel);
+  document.getElementById("selectHint").style.display = hasSel ? "none" : "block";
 }
 
-// ── Fetch + Lookup ──
 function lookupVessel(name) {
-  currentVesselName = name;
+  currentVesselName = name; selectedCallIdx = -1;
   document.getElementById("vesselNameDisplay").textContent = name;
   document.getElementById("vesselNameDisplay").classList.remove("placeholder");
   document.getElementById("emptyState").style.display = "none";
   document.getElementById("vesselData").style.display = "none";
   showStatus("loading", "Looking up vessel data...");
-
   fetchData().then(function(result) {
     if (!result) { showStatus("error", "Could not fetch sailing data."); return; }
-
     var vessels = result.vessels || [];
     var search = name.toUpperCase().trim();
-
     var matches = vessels.filter(function(v) {
       var n = (v.vesselName || "").toUpperCase().trim();
       return n === search || n.indexOf(search) !== -1 || search.indexOf(n) !== -1;
     });
-
     currentMatches = matches;
-
     if (!matches.length) {
       showStatus("warning", "Vessel not found in current sailing lists.");
-      currentEta = null; updateReplaceBtn();
-      renderSourceBadges(result.sources);
+      updateUI(); renderSourceBadges(result.sources, []);
       document.getElementById("vesselData").style.display = "block";
       document.getElementById("callEntries").innerHTML = "";
       return;
     }
-
-    // Find best ETA
-    var now = new Date();
-    currentEta = null;
-    for (var i = 0; i < matches.length; i++) {
-      var e = matches[i].eta;
-      if (e) {
-        var d = new Date(e);
-        if (!currentEta || (d >= now && d < new Date(currentEta))) currentEta = e;
-      }
-    }
-    if (!currentEta) {
-      for (var j = 0; j < matches.length; j++) {
-        if (matches[j].eta) { currentEta = matches[j].eta; break; }
-      }
-    }
-
-    renderVesselData(matches, result.sources);
-    hideStatus();
-    updateReplaceBtn();
-  }).catch(function(err) {
-    showStatus("error", "Error: " + err.message);
-  });
+    renderVesselData(matches, result.sources); hideStatus(); updateUI();
+  }).catch(function(err) { showStatus("error", "Error: " + err.message); });
 }
 
 function fetchData() {
   if (cachedData && (Date.now() - cacheTs) < CACHE_TTL) return Promise.resolve(cachedData);
-
-  // Try proxy first, fall back to direct HHLA
   if (proxyAvailable === false) return fetchDirect();
-
-  return fetch(PROXY_URL).then(function(r) {
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    return r.json();
-  }).then(function(data) {
-    proxyAvailable = true;
-    cachedData = data; cacheTs = Date.now();
-    return data;
-  }).catch(function() {
-    proxyAvailable = false;
-    return fetchDirect();
-  });
+  return fetch(PROXY_URL).then(function(r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+  .then(function(data) { proxyAvailable = true; cachedData = data; cacheTs = Date.now(); return data; })
+  .catch(function() { proxyAvailable = false; return fetchDirect(); });
 }
-
 function fetchDirect() {
-  // Fallback: HHLA only (no Eurogate without proxy)
-  return fetch(COAST_DIRECT).then(function(r) {
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    return r.json();
-  }).then(function(json) {
-    var vessels = parseHHLADirect(json);
-    var data = {
-      vessels: vessels,
-      sources: { hhla: "ok", eurogate: "unavailable" },
-      timestamp: new Date().toISOString(),
-    };
-    cachedData = data; cacheTs = Date.now();
-    return data;
+  return fetch(COAST_DIRECT).then(function(r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+  .then(function(json) {
+    var vessels = []; function walk(o) {
+      if (Array.isArray(o)) { if (o.length > 0 && typeof o[0] === "object" && o[0] !== null) {
+        var keys = Object.keys(o[0]); if (keys.some(function(k) { return k.toLowerCase().indexOf("schiff") !== -1 || k.toLowerCase().indexOf("vessel") !== -1; })) {
+          o.forEach(function(item) { var f = function(ks) { for (var i=0;i<ks.length;i++) if (item[ks[i]] != null && item[ks[i]] !== "") return item[ks[i]]; return null; };
+            vessels.push({ vesselName:f(["schiffabfertigung.schiffsname","vesselName"]), eta:f(["schiffabfertigung.ankunftsollzeitpunkt","terminalEta"]),
+              ata:f(["schiffabfertigung.ankunftistzeitpunkt","terminalAta"]), etd:f(["schiffabfertigung.abfahrtsollzeitpunkt","terminalEtd"]),
+              atd:f(["schiffabfertigung.abfahrtistzeitpunkt","terminalAtd"]), terminal:f(["schiffabfertigung.terminal","facilityName"]),
+              voyageIn:f(["schiffabfertigung.importreise","carrierVoyageDischargeNumber"]), voyageOut:f(["schiffabfertigung.exportreise","carrierVoyageLoadNumber"]), source:"HHLA" });
+          }); return; } } o.forEach(walk); } else if (typeof o === "object" && o !== null) Object.values(o).forEach(walk); }
+    walk(json);
+    var data = { vessels:vessels, sources:{hhla:"ok",eurogate:"unavailable"}, timestamp:new Date().toISOString() };
+    cachedData = data; cacheTs = Date.now(); return data;
   }).catch(function() { return null; });
 }
 
-function parseHHLADirect(json) {
-  // Same parsing logic as the worker, simplified
-  var result = [];
-  function walk(o) {
-    if (Array.isArray(o)) {
-      if (o.length > 0 && typeof o[0] === "object" && o[0] !== null) {
-        var keys = Object.keys(o[0]);
-        if (keys.some(function(k) { return k.toLowerCase().indexOf("schiff") !== -1 || k.toLowerCase().indexOf("vessel") !== -1; })) {
-          o.forEach(function(item) {
-            result.push({
-              vesselName: item["schiffabfertigung.schiffsname"] || item.vesselName || item.schiffsname || null,
-              eta: item["schiffabfertigung.ankunftsollzeitpunkt"] || item.terminalEta || item.eta || null,
-              ata: item["schiffabfertigung.ankunftistzeitpunkt"] || item.terminalAta || item.ata || null,
-              etd: item["schiffabfertigung.abfahrtsollzeitpunkt"] || item.terminalEtd || item.etd || null,
-              atd: item["schiffabfertigung.abfahrtistzeitpunkt"] || item.terminalAtd || item.atd || null,
-              terminal: item["schiffabfertigung.terminal"] || item.facilityName || item.terminal || null,
-              voyageIn: item["schiffabfertigung.importreise"] || item.carrierVoyageDischargeNumber || null,
-              voyageOut: item["schiffabfertigung.exportreise"] || item.carrierVoyageLoadNumber || null,
-              source: "HHLA",
-            });
-          });
-          return;
-        }
-      }
-      o.forEach(walk);
-    } else if (typeof o === "object" && o !== null) {
-      Object.values(o).forEach(walk);
-    }
-  }
-  walk(json);
-  return result;
-}
-
-// ── Render ──
 function renderVesselData(matches, sources) {
-  renderSourceBadges(sources);
-
-  var container = document.getElementById("callEntries");
-  container.innerHTML = "";
-
-  matches.forEach(function(m) {
-    var isEG = m.source === "Eurogate";
-    var termClass = isEG ? "eg" : "hhla";
+  renderSourceBadges(sources, matches);
+  var container = document.getElementById("callEntries"); container.innerHTML = "";
+  matches.forEach(function(m, idx) {
+    var isEG = m.source === "Eurogate", termClass = isEG ? "eg" : "hhla";
     var termLabel = m.terminal || (isEG ? "Eurogate" : "HHLA");
     var voyage = m.voyageIn || m.voyageOut || "";
-
-    var html = '<div class="call-entry">' +
-      '<div class="call-entry-header">' +
-        '<span class="call-terminal ' + termClass + '">' + esc(termLabel) + '</span>' +
-        (voyage ? '<span class="call-voyage">' + esc(voyage) + '</span>' : '') +
-      '</div>' +
-      dataRow("ETA (planned)", fmtDT(m.eta), !!m.eta) +
-      dataRow("ATA (actual)", fmtDT(m.ata), false) +
-      dataRow("ETD (planned)", fmtDT(m.etd), !!m.etd) +
-      dataRow("ATD (actual)", fmtDT(m.atd), false) +
-    '</div>';
-
-    container.insertAdjacentHTML("beforeend", html);
+    var div = document.createElement("div"); div.className = "call-entry"; div.setAttribute("data-idx", idx);
+    div.innerHTML =
+      '<div class="call-entry-header"><span class="call-terminal '+termClass+'">'+esc(termLabel)+'</span>'+(voyage?'<span class="call-voyage">'+esc(voyage)+'</span>':'')+'</div>'+
+      dataRow("ETA (planned)",fmtDT(m.eta),!!m.eta)+dataRow("ATA (actual)",fmtDT(m.ata),false)+
+      dataRow("ETD (planned)",fmtDT(m.etd),!!m.etd)+dataRow("ATD (actual)",fmtDT(m.atd),false);
+    div.addEventListener("click", function() { selectCall(idx); });
+    container.appendChild(div);
   });
-
-  document.getElementById("vesselData").style.display = "block";
-  lucide.createIcons();
+  document.getElementById("vesselData").style.display = "block"; lucide.createIcons();
 }
-
-function renderSourceBadges(sources) {
+function selectCall(idx) {
+  selectedCallIdx = idx;
+  document.querySelectorAll(".call-entry").forEach(function(el) { el.classList.remove("selected"); });
+  var sel = document.querySelector('.call-entry[data-idx="'+idx+'"]');
+  if (sel) sel.classList.add("selected");
+  updateUI();
+}
+function renderSourceBadges(sources, matches) {
   if (!sources) return;
-  var html = "";
-  if (sources.hhla)
-    html += '<span class="source-badge ' + (sources.hhla === "ok" ? "ok" : "fail") + '">' +
-      '<i data-lucide="' + (sources.hhla === "ok" ? "check-circle" : "x-circle") + '"></i>HHLA</span>';
-  if (sources.eurogate)
-    html += '<span class="source-badge ' + (sources.eurogate === "ok" ? "ok" : "fail") + '">' +
-      '<i data-lucide="' + (sources.eurogate === "ok" ? "check-circle" : "x-circle") + '"></i>Eurogate</span>';
-  document.getElementById("sourceBadges").innerHTML = html;
-  lucide.createIcons();
+  var ms = (matches || []).map(function(m) { return m.source; });
+  var hH = ms.indexOf("HHLA") !== -1, hE = ms.indexOf("Eurogate") !== -1, html = "";
+  if (sources.hhla === "ok") html += '<span class="source-badge '+(hH?"ok":"na")+'"><i data-lucide="'+(hH?"check-circle":"minus-circle")+'"></i>HHLA'+(hH?"":" (no match)")+'</span>';
+  else html += '<span class="source-badge fail"><i data-lucide="x-circle"></i>HHLA</span>';
+  if (sources.eurogate === "ok") html += '<span class="source-badge '+(hE?"ok":"na")+'"><i data-lucide="'+(hE?"check-circle":"minus-circle")+'"></i>Eurogate'+(hE?"":" (no match)")+'</span>';
+  else if (sources.eurogate === "unavailable") html += '<span class="source-badge na"><i data-lucide="minus-circle"></i>Eurogate (proxy needed)</span>';
+  else html += '<span class="source-badge fail"><i data-lucide="x-circle"></i>Eurogate</span>';
+  document.getElementById("sourceBadges").innerHTML = html; lucide.createIcons();
 }
-
-function dataRow(label, value, highlight) {
-  var cls = "data-value";
-  if (highlight) cls += " highlight";
-  if (!value) cls += " dim";
-  return '<div class="data-row"><span class="data-label">' + esc(label) +
-    '</span><span class="' + cls + '">' + esc(value || "\u2014") + '</span></div>';
+function dataRow(label, value, hl) {
+  var cls = "data-value"; if(hl) cls+=" highlight"; if(!value) cls+=" dim";
+  return '<div class="data-row"><span class="data-label">'+esc(label)+'</span><span class="'+cls+'">'+esc(value||"\u2014")+'</span></div>';
 }
-
 function fmtDT(iso) {
   if (!iso) return null;
-  try {
-    var d = new Date(iso);
-    if (isNaN(d.getTime())) return String(iso);
-    var dd = String(d.getDate()).padStart(2, "0");
-    var mm = String(d.getMonth() + 1).padStart(2, "0");
-    var yy = d.getFullYear();
-    var hh = String(d.getHours()).padStart(2, "0");
-    var mi = String(d.getMinutes()).padStart(2, "0");
-    return dd + "." + mm + "." + yy + "  " + hh + ":" + mi;
+  try { var d=new Date(iso); if(isNaN(d.getTime())) return String(iso);
+    return String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0")+"."+d.getFullYear()+"  "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
   } catch(e) { return String(iso); }
 }
-
-function esc(s) {
-  if (!s) return "";
-  return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-}
+function esc(s) { return s?String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"):""; }
 
 // ── Replace ETA ──
 function handleReplace() {
   var col = document.getElementById("columnInput").value.trim().toUpperCase();
-  if (!col || !currentEta) return;
+  if (!col || selectedCallIdx < 0) return;
+  var match = currentMatches[selectedCallIdx];
+  if (!match || !match.eta) return;
 
   var btn = document.getElementById("replaceBtn");
   var res = document.getElementById("replaceResult");
-  btn.disabled = true;
-  res.className = "replace-result"; res.style.display = "none";
+  btn.disabled = true; res.className = "replace-result"; res.style.display = "none";
 
   Excel.run(function(ctx) {
     var sel = ctx.workbook.getSelectedRange();
     sel.load("rowIndex, rowCount, address");
     return ctx.sync().then(function() {
       var sheet = ctx.workbook.worksheets.getItem(sel.address.split("!")[0].replace(/'/g, ""));
-      var start = sel.rowIndex;
-      var count = sel.rowCount;
-      var cells = [];
-
-      for (var i = 0; i < count; i++) {
-        var c = sheet.getRange(col + (start + i + 1));
-        c.load("numberFormat, values");
-        cells.push(c);
-      }
-
+      var start = sel.rowIndex, count = sel.rowCount, cells = [];
+      for (var i = 0; i < count; i++) { var c = sheet.getRange(col + (start+i+1)); c.load("numberFormat, values, format/fill"); cells.push(c); }
       return ctx.sync().then(function() {
-        var etaDate = new Date(currentEta);
-        var n = 0;
-
+        var etaDate = new Date(match.eta), n = 0;
         for (var i = 0; i < cells.length; i++) {
           var cell = cells[i];
-          var existFmt = (cell.numberFormat && cell.numberFormat[0]) ? (cell.numberFormat[0][0] || "") : "";
-          var existVal = (cell.values && cell.values[0]) ? String(cell.values[0][0]) : "";
-          cell.values = [[formatLike(etaDate, existVal, existFmt)]];
+          var ef = (cell.numberFormat&&cell.numberFormat[0])?(cell.numberFormat[0][0]||""):"";
+          var ev = (cell.values&&cell.values[0])?String(cell.values[0][0]):"";
+          cell.values = [[formatLike(etaDate, ev, ef)]];
+          if (highlightOn) { cell.format.fill.color = HIGHLIGHT_COLOR; }
           n++;
         }
-
         return ctx.sync().then(function() {
-          btn.disabled = false;
-          res.className = "replace-result show success";
-          document.getElementById("replaceResultText").textContent = "Updated " + n + " cell" + (n !== 1 ? "s" : "");
-          res.querySelector('[data-lucide]').setAttribute("data-lucide", "check");
-          lucide.createIcons();
+          btn.disabled = false; res.className = "replace-result show success";
+          document.getElementById("replaceResultText").textContent = "Updated "+n+" cell"+(n!==1?"s":"")+(highlightOn?" (highlighted)":"");
+          res.querySelector("[data-lucide]").setAttribute("data-lucide","check"); lucide.createIcons();
         });
       });
     });
   }).catch(function(err) {
-    btn.disabled = false;
-    res.className = "replace-result show error";
+    btn.disabled = false; res.className = "replace-result show error";
     document.getElementById("replaceResultText").textContent = err.message;
-    res.querySelector('[data-lucide]').setAttribute("data-lucide", "alert-circle");
-    lucide.createIcons();
+    res.querySelector("[data-lucide]").setAttribute("data-lucide","alert-circle"); lucide.createIcons();
   });
 }
 
-function formatLike(date, existVal, numFmt) {
-  var dd = String(date.getDate()).padStart(2, "0");
-  var mm = String(date.getMonth() + 1).padStart(2, "0");
-  var yyyy = date.getFullYear();
-  var yy = String(yyyy).slice(-2);
-  var v = String(existVal).trim();
-
-  if (v) {
-    if (/^\d{1,2}\.\d{1,2}\.\d{4}$/.test(v)) return dd+"."+mm+"."+yyyy;
-    if (/^\d{1,2}\.\d{1,2}\.\d{2}$/.test(v)) return dd+"."+mm+"."+yy;
-    if (/^\d{1,2}\.\d{1,2}\.$/.test(v))       return dd+"."+mm+".";
-    if (/^\d{1,2}\.\d{1,2}$/.test(v))          return dd+"."+mm;
-    if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(v))   return mm+"/"+dd+"/"+yyyy;
-    if (/^\d{1,2}\/\d{1,2}\/\d{2}$/.test(v))   return mm+"/"+dd+"/"+yy;
-    if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(v))     return yyyy+"-"+mm+"-"+dd;
-  }
-  if (numFmt) {
-    var f = numFmt.toLowerCase();
-    if (f.indexOf("mm/dd") !== -1) return mm+"/"+dd+"/"+(f.indexOf("yyyy") !== -1 ? yyyy : yy);
-    if (f.indexOf("dd.mm") !== -1) return dd+"."+mm+"."+(f.indexOf("yyyy") !== -1 ? yyyy : yy);
-  }
+function formatLike(date, ev, nf) {
+  var dd=String(date.getDate()).padStart(2,"0"),mm=String(date.getMonth()+1).padStart(2,"0"),yyyy=date.getFullYear(),yy=String(yyyy).slice(-2),v=String(ev).trim();
+  if(v){if(/^\d{1,2}\.\d{1,2}\.\d{4}$/.test(v))return dd+"."+mm+"."+yyyy;if(/^\d{1,2}\.\d{1,2}\.\d{2}$/.test(v))return dd+"."+mm+"."+yy;
+    if(/^\d{1,2}\.\d{1,2}\.$/.test(v))return dd+"."+mm+".";if(/^\d{1,2}\.\d{1,2}$/.test(v))return dd+"."+mm;
+    if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(v))return mm+"/"+dd+"/"+yyyy;if(/^\d{1,2}\/\d{1,2}\/\d{2}$/.test(v))return mm+"/"+dd+"/"+yy;
+    if(/^\d{4}-\d{1,2}-\d{1,2}$/.test(v))return yyyy+"-"+mm+"-"+dd;}
+  if(nf){var f=nf.toLowerCase();if(f.indexOf("mm/dd")!==-1)return mm+"/"+dd+"/"+(f.indexOf("yyyy")!==-1?yyyy:yy);
+    if(f.indexOf("dd.mm")!==-1)return dd+"."+mm+"."+(f.indexOf("yyyy")!==-1?yyyy:yy);}
   return dd+"."+mm+"."+yyyy;
 }
 </script>
