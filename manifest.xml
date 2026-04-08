@@ -12,13 +12,13 @@
   <DisplayName DefaultValue="Hamburg Vessel Tracker" />
   <Description DefaultValue="Track vessel ETA/ETD at Hamburg — HHLA and Eurogate terminals." />
   <!-- UPDATE these URLs to your GitHub Pages or hosting URL -->
-  <IconUrl DefaultValue="https://YOUR_USERNAME.github.io/hamburg-vessel-tracker/assets/icon-32.png" />
-  <HighResolutionIconUrl DefaultValue="https://YOUR_USERNAME.github.io/hamburg-vessel-tracker/assets/icon-80.png" />
-  <SupportUrl DefaultValue="https://YOUR_USERNAME.github.io/hamburg-vessel-tracker/" />
+  <IconUrl DefaultValue="https://kiluho.github.io/hamburg-vessel-tracker/assets/icon-32.png" />
+  <HighResolutionIconUrl DefaultValue="https://kiluho.github.io/hamburg-vessel-tracker/assets/icon-80.png" />
+  <SupportUrl DefaultValue="https://kiluho.github.io/hamburg-vessel-tracker/" />
 
   <AppDomains>
     <AppDomain>https://coast.hhla.de</AppDomain>
-    <AppDomain>https://YOUR_SUBDOMAIN.workers.dev</AppDomain>
+    <AppDomain>https://begemanncolin.workers.dev</AppDomain>
   </AppDomains>
 
   <Hosts>
@@ -27,7 +27,7 @@
 
   <DefaultSettings>
     <!-- UPDATE this URL -->
-    <SourceLocation DefaultValue="https://YOUR_USERNAME.github.io/hamburg-vessel-tracker/taskpane.html" />
+    <SourceLocation DefaultValue="https://kiluho.github.io/hamburg-vessel-tracker/taskpane.html" />
   </DefaultSettings>
 
   <Permissions>ReadWriteDocument</Permissions>
@@ -77,13 +77,13 @@
     <Resources>
       <bt:Images>
         <!-- UPDATE these URLs -->
-        <bt:Image id="Icon.16x16" DefaultValue="https://YOUR_USERNAME.github.io/hamburg-vessel-tracker/assets/icon-16.png" />
-        <bt:Image id="Icon.32x32" DefaultValue="https://YOUR_USERNAME.github.io/hamburg-vessel-tracker/assets/icon-32.png" />
-        <bt:Image id="Icon.80x80" DefaultValue="https://YOUR_USERNAME.github.io/hamburg-vessel-tracker/assets/icon-80.png" />
+        <bt:Image id="Icon.16x16" DefaultValue="https://kiluho.github.io/hamburg-vessel-tracker/assets/icon-16.png" />
+        <bt:Image id="Icon.32x32" DefaultValue="https://kiluho.github.io/hamburg-vessel-tracker/assets/icon-32.png" />
+        <bt:Image id="Icon.80x80" DefaultValue="https://kiluho.github.io/hamburg-vessel-tracker/assets/icon-80.png" />
       </bt:Images>
       <bt:Urls>
-        <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://YOUR_USERNAME.github.io/hamburg-vessel-tracker/" />
-        <bt:Url id="Taskpane.Url" DefaultValue="https://YOUR_USERNAME.github.io/hamburg-vessel-tracker/taskpane.html" />
+        <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://kiluho.github.io/hamburg-vessel-tracker/" />
+        <bt:Url id="Taskpane.Url" DefaultValue="https://kiluho.github.io/hamburg-vessel-tracker/taskpane.html" />
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="GetStarted.Title" DefaultValue="Hamburg Vessel Tracker" />
