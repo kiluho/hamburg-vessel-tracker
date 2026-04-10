@@ -523,15 +523,15 @@ function selectCall(idx) {
 }
 function renderSourceBadges(sources, matches) {
   if (!sources) return;
-  var hasMatch = (matches || []).length > 0;
   var html = "";
-  if (sources.hafenhamburg === "ok") {
-    html += '<span class="source-badge '+(hasMatch?"ok":"na")+'"><i data-lucide="'+(hasMatch?"check-circle":"minus-circle")+'"></i>HVCC data'+(hasMatch?"":" (no match)")+'</span>';
-  } else if (sources.hhla_coast === "ok") {
-    html += '<span class="source-badge '+(hasMatch?"ok":"na")+'"><i data-lucide="'+(hasMatch?"check-circle":"minus-circle")+'"></i>HHLA only'+(hasMatch?"":" (no match)")+'</span>';
-  } else {
-    html += '<span class="source-badge fail"><i data-lucide="x-circle"></i>No data source available</span>';
+  function badge(key, label) {
+    if (!sources[key]) return;
+    var ok = sources[key] === "ok";
+    html += '<span class="source-badge '+(ok?"ok":"fail")+'"><i data-lucide="'+(ok?"check-circle":"x-circle")+'"></i>'+label+'</span>';
   }
+  badge("hafenhamburg", "Port HH");
+  badge("hhla_coast", "HHLA");
+  badge("eurogate", "Eurogate");
   document.getElementById("sourceBadges").innerHTML = html; lucide.createIcons();
 }
 function dataRow(label, value, hl) {
