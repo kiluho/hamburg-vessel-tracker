@@ -1,6 +1,6 @@
 # Hamburg Vessel Tracker
 
-## 💾 Installation
+## Installation
 The add-in is not available on the Microsoft Store, so you need to install manually:
 1. Open [Excel on the web](https://excel.cloud.microsoft/en-us/) in your browser
 2. Open the drop-down Add-ins from the ribbon
