@@ -151,6 +151,9 @@
     .input-field:focus { border-color: var(--accent); }
     .input-field::placeholder { color: var(--text-muted); opacity: .6; font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; }
     .input-hint { font-size: 10px; color: var(--text-muted); margin-top: 3px; opacity: .7; }
+    .select-field { width: 100%; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 5px; padding: 8px 10px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--text-primary); outline: none; transition: border-color .15s; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238e99a8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; cursor: pointer; }
+    html.dark .select-field { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23748CAB' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); }
+    .select-field:focus { border-color: var(--accent); }
     .select-hint { font-size: 11px; color: var(--text-muted); text-align: center; padding: 8px 0; font-style: italic; }
     .toggle-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 6px 0; }
     .toggle-label { font-size: 11px; font-weight: 500; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
@@ -201,7 +204,20 @@
           <div class="input-group">
             <label class="input-label">Target column letter</label>
             <input type="text" class="input-field" id="columnInput" placeholder="e.g. D" maxlength="3" />
-            <div class="input-hint">Saved automatically. Writes in the existing cell's date format.</div>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Date format</label>
+            <select class="select-field" id="dateFormatSelect">
+              <option value="DD.MM.YYYY">DD.MM.YYYY</option>
+              <option value="DD.MM.YY">DD.MM.YY</option>
+              <option value="DD.MM.">DD.MM.</option>
+              <option value="DD.MM">DD.MM</option>
+              <option value="DD/MM/">DD/MM/</option>
+              <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+              <option value="MM/DD/YY">MM/DD/YY</option>
+              <option value="MM/DD/">MM/DD/</option>
+              <option value="MM/DD">MM/DD</option>
+            </select>
           </div>
           <div class="toggle-row">
             <span class="toggle-label"><i data-lucide="paintbrush"></i>Highlight cell in yellow</span>
@@ -226,6 +242,7 @@ const PROXY_URL = "https://hamburg-vessel-proxy.begemanncolin.workers.dev/api/sa
 const COAST_DIRECT = "https://coast.hhla.de/api/execute-report/Standard-Report-Segelliste";
 const STORAGE_KEY = "hvt_eta_column";
 const STORAGE_HL = "hvt_highlight";
+const STORAGE_FMT = "hvt_date_format";
 const HIGHLIGHT_COLOR = "#FEFF42";
 
 let cachedData = null, cacheTs = 0;
@@ -242,9 +259,14 @@ Office.onReady(function(info) {
     if (saved) document.getElementById("columnInput").value = saved;
     highlightOn = localStorage.getItem(STORAGE_HL) === "true";
     updateToggleUI();
+    var savedFmt = localStorage.getItem(STORAGE_FMT);
+    if (savedFmt) document.getElementById("dateFormatSelect").value = savedFmt;
     document.getElementById("columnInput").addEventListener("input", function() {
       var v = this.value.toUpperCase().replace(/[^A-Z]/g, "");
       this.value = v; localStorage.setItem(STORAGE_KEY, v); updateUI();
+    });
+    document.getElementById("dateFormatSelect").addEventListener("change", function() {
+      localStorage.setItem(STORAGE_FMT, this.value);
     });
     document.getElementById("highlightToggle").addEventListener("click", function() {
       highlightOn = !highlightOn;
@@ -488,14 +510,12 @@ function handleReplace() {
     return ctx.sync().then(function() {
       var sheet = ctx.workbook.worksheets.getItem(sel.address.split("!")[0].replace(/'/g, ""));
       var start = sel.rowIndex, count = sel.rowCount, cells = [];
-      for (var i = 0; i < count; i++) { var c = sheet.getRange(col + (start+i+1)); c.load("numberFormat, values"); cells.push(c); }
+      for (var i = 0; i < count; i++) { var c = sheet.getRange(col + (start+i+1)); cells.push(c); }
       return ctx.sync().then(function() {
         var etaDate = new Date(match.eta), n = 0;
         for (var i = 0; i < cells.length; i++) {
           var cell = cells[i];
-          var ef = (cell.numberFormat&&cell.numberFormat[0])?(cell.numberFormat[0][0]||""):"";
-          var ev = (cell.values&&cell.values[0])?String(cell.values[0][0]):"";
-          cell.values = [[formatLike(etaDate, ev, ef)]];
+          cell.values = [[formatLike(etaDate)]];
           if (highlightOn) cell.format.fill.color = HIGHLIGHT_COLOR;
           n++;
         }
@@ -513,15 +533,21 @@ function handleReplace() {
   });
 }
 
-function formatLike(date, ev, nf) {
-  var dd=String(date.getDate()).padStart(2,"0"),mm=String(date.getMonth()+1).padStart(2,"0"),yyyy=date.getFullYear(),yy=String(yyyy).slice(-2),v=String(ev).trim();
-  if(v){if(/^\d{1,2}\.\d{1,2}\.\d{4}$/.test(v))return dd+"."+mm+"."+yyyy;if(/^\d{1,2}\.\d{1,2}\.\d{2}$/.test(v))return dd+"."+mm+"."+yy;
-    if(/^\d{1,2}\.\d{1,2}\.$/.test(v))return dd+"."+mm+".";if(/^\d{1,2}\.\d{1,2}$/.test(v))return dd+"."+mm;
-    if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(v))return mm+"/"+dd+"/"+yyyy;if(/^\d{1,2}\/\d{1,2}\/\d{2}$/.test(v))return mm+"/"+dd+"/"+yy;
-    if(/^\d{4}-\d{1,2}-\d{1,2}$/.test(v))return yyyy+"-"+mm+"-"+dd;}
-  if(nf){var f=nf.toLowerCase();if(f.indexOf("mm/dd")!==-1)return mm+"/"+dd+"/"+(f.indexOf("yyyy")!==-1?yyyy:yy);
-    if(f.indexOf("dd.mm")!==-1)return dd+"."+mm+"."+(f.indexOf("yyyy")!==-1?yyyy:yy);}
-  return dd+"."+mm+"."+yyyy;
+function formatLike(date) {
+  var dd=String(date.getDate()).padStart(2,"0"),mm=String(date.getMonth()+1).padStart(2,"0"),yyyy=date.getFullYear(),yy=String(yyyy).slice(-2);
+  var fmt = document.getElementById("dateFormatSelect").value;
+  switch(fmt) {
+    case "DD.MM.YYYY": return dd+"."+mm+"."+yyyy;
+    case "DD.MM.YY":   return dd+"."+mm+"."+yy;
+    case "DD.MM.":     return dd+"."+mm+".";
+    case "DD.MM":      return dd+"."+mm;
+    case "DD/MM/":     return dd+"/"+mm+"/";
+    case "MM/DD/YYYY": return mm+"/"+dd+"/"+yyyy;
+    case "MM/DD/YY":   return mm+"/"+dd+"/"+yy;
+    case "MM/DD/":     return mm+"/"+dd+"/";
+    case "MM/DD":      return mm+"/"+dd;
+    default:           return dd+"."+mm+"."+yyyy;
+  }
 }
 </script>
 </body>
