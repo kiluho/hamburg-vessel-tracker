@@ -513,9 +513,18 @@ function handleReplace() {
       for (var i = 0; i < count; i++) { var c = sheet.getRange(col + (start+i+1)); cells.push(c); }
       return ctx.sync().then(function() {
         var etaDate = new Date(match.eta), n = 0;
+        var fmtMap = {
+          "DD.MM.YYYY": "DD.MM.YYYY", "DD.MM.YY": "DD.MM.YY",
+          "DD.MM.": "DD.MM.", "DD.MM": "DD.MM",
+          "DD/MM/": "DD/MM/", "MM/DD/YYYY": "MM/DD/YYYY",
+          "MM/DD/YY": "MM/DD/YY", "MM/DD/": "MM/DD/", "MM/DD": "MM/DD"
+        };
+        var selFmt = document.getElementById("dateFormatSelect").value;
+        var numFmt = fmtMap[selFmt] || "DD.MM.YYYY";
         for (var i = 0; i < cells.length; i++) {
           var cell = cells[i];
           cell.values = [[formatLike(etaDate)]];
+          cell.numberFormat = [[numFmt]];
           if (highlightOn) cell.format.fill.color = HIGHLIGHT_COLOR;
           n++;
         }
@@ -534,20 +543,14 @@ function handleReplace() {
 }
 
 function formatLike(date) {
-  var dd=String(date.getDate()).padStart(2,"0"),mm=String(date.getMonth()+1).padStart(2,"0"),yyyy=date.getFullYear(),yy=String(yyyy).slice(-2);
-  var fmt = document.getElementById("dateFormatSelect").value;
-  switch(fmt) {
-    case "DD.MM.YYYY": return dd+"."+mm+"."+yyyy;
-    case "DD.MM.YY":   return dd+"."+mm+"."+yy;
-    case "DD.MM.":     return dd+"."+mm+".";
-    case "DD.MM":      return dd+"."+mm;
-    case "DD/MM/":     return dd+"/"+mm+"/";
-    case "MM/DD/YYYY": return mm+"/"+dd+"/"+yyyy;
-    case "MM/DD/YY":   return mm+"/"+dd+"/"+yy;
-    case "MM/DD/":     return mm+"/"+dd+"/";
-    case "MM/DD":      return mm+"/"+dd;
-    default:           return dd+"."+mm+"."+yyyy;
-  }
+  // Write as Excel date serial number so sorting works correctly.
+  // Excel's epoch is 1 Jan 1900 (serial 1), but has a Lotus 1-2-3 bug
+  // treating 1900 as a leap year, so dates after Feb 28 1900 are off by 1.
+  // Formula: days since 31 Dec 1899 + 1 (Lotus bug)
+  var epoch = new Date(Date.UTC(1899, 11, 31));
+  var utcDate = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+  var serial = Math.round((utcDate - epoch.getTime()) / 86400000);
+  return serial;
 }
 </script>
 </body>
